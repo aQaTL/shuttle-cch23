@@ -1,0 +1,11 @@
+[package]
+name = "cch23-aqatl"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+axum = "0.6"
+shuttle-axum = "0.34.0"
+shuttle-runtime = "0.34.0"
+tokio = { version = "1", features = ["rt-multi-thread", "net", "macros", "fs", "tracing"] }
