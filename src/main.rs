@@ -1,7 +1,8 @@
 use axum::extract::Path;
+use axum::response::IntoResponse;
 use axum::routing::post;
 use axum::{http::StatusCode, routing::get, Json, Router};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use shuttle_axum::AxumService;
 
 #[shuttle_runtime::main]
@@ -11,7 +12,8 @@ async fn shuttle_main() -> shuttle_axum::ShuttleAxum {
 		.route("/hello", get(hello_world))
 		.route("/-1/error", get(error_page))
 		.route("/1/*nums", get(day_1))
-		.route("/4/strength", post(day_4));
+		.route("/4/strength", post(day_4))
+		.route("/6", post(day_6));
 	Ok(AxumService(router))
 }
 
@@ -48,4 +50,15 @@ async fn day_4(Json(reindeer): Json<Vec<Reindeer>>) -> String {
 		.map(|r| r.strength)
 		.sum::<i32>()
 		.to_string()
+}
+
+async fn day_6(body: String) -> impl IntoResponse {
+	let elf = body.as_bytes().windows(3).filter(|w| w == b"elf").count();
+
+	return Json(Day6Response { elf });
+
+	#[derive(Serialize)]
+	struct Day6Response {
+		elf: usize,
+	}
 }
