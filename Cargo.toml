@@ -6,6 +6,8 @@ publish = false
 
 [dependencies]
 axum = "0.6"
+hyper = "0.14"
 shuttle-axum = "0.34.0"
 shuttle-runtime = "0.34.0"
 tokio = { version = "1", features = ["rt-multi-thread", "net", "macros", "fs", "tracing"] }
+serde = { version = "1.0.193", features = ["derive"] }

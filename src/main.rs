@@ -1,5 +1,7 @@
 use axum::extract::Path;
-use axum::{http::StatusCode, routing::get, Router};
+use axum::routing::post;
+use axum::{http::StatusCode, routing::get, Json, Router};
+use serde::Deserialize;
 use shuttle_axum::AxumService;
 
 #[shuttle_runtime::main]
@@ -8,7 +10,8 @@ async fn shuttle_main() -> shuttle_axum::ShuttleAxum {
 		.route("/", get(nothing))
 		.route("/hello", get(hello_world))
 		.route("/-1/error", get(error_page))
-		.route("/1/*nums", get(day_1));
+		.route("/1/*nums", get(day_1))
+		.route("/4/strength", post(day_4));
 	Ok(AxumService(router))
 }
 
@@ -29,5 +32,20 @@ async fn day_1(Path(nums): Path<String>) -> String {
 		.map(|x| x.parse::<i64>().unwrap())
 		.fold(0, |acc, x| acc ^ x)
 		.pow(3)
+		.to_string()
+}
+
+#[derive(Deserialize)]
+struct Reindeer {
+	#[allow(dead_code)]
+	name: String,
+	strength: i32,
+}
+
+async fn day_4(Json(reindeer): Json<Vec<Reindeer>>) -> String {
+	reindeer
+		.into_iter()
+		.map(|r| r.strength)
+		.sum::<i32>()
 		.to_string()
 }
